@@ -1,0 +1,73 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+//import 'package:syncfusion_flutter_core/core.dart';
+
+void main() {
+//  SyncfusionLicense.registerLicense("NT8mJyc2IWhia31ifWN9Z2FoZXxifGFjYWNzYGlma2lhZXMSHmg6OidhY2JrY2dkEzo6OicyfTIwfTo9"); //This license key is valid for 1 month (until 2 June 2020)
+  runApp(BookAppointment());
+}
+
+class BookAppointment extends StatefulWidget  {
+  @override
+  State<StatefulWidget> createState() => BookAppointmentState();
+}
+
+class BookAppointmentState extends State<BookAppointment> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Docbook',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Book Appointment',
+                style: TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+          ),
+          ),
+          backgroundColor: Color(0xff31A05E),
+        ),
+        body: Container(
+          child: SfCalendar(
+            view: CalendarView.month,
+            dataSource: AppointmentDataSource(_getDataSource()),
+            monthViewSettings: MonthViewSettings(
+              showAgenda: true,
+              appointmentDisplayMode: MonthAppointmentDisplayMode.appointment
+            ),
+          ),
+        ),
+      )
+    );
+  }
+}
+
+List<Appointment> _getDataSource()  {
+  List<Appointment> appointments = <Appointment>[];
+  final DateTime today = DateTime.now();
+  final DateTime startTime =
+  DateTime(today.year, today.month, today.day, 9, 0, 0);
+  final DateTime endTime = startTime.add(const Duration(hours: 2));
+  appointments.add(
+      Appointment('illness', startTime, endTime, const Color(0xFF0F8644), false));
+  return appointments;
+}
+
+class AppointmentDataSource extends CalendarDataSource  {
+  List<Appointment> source;
+  AppointmentDataSource(source) {
+    this.source = source;
+  }
+}
+
+class Appointment {
+  String eventName;
+  DateTime from;
+  DateTime to;
+  Color background;
+  bool isAllDay;
+
+  Appointment(this.eventName, this.from, this.to, this.background, this.isAllDay);
+}
